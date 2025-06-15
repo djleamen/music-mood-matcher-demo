@@ -27,7 +27,7 @@ An intelligent music recommendation system that analyzes your mood through natur
 - **Interactive Charts**: Explore your data with dynamic visualizations
 
 ### 🔬 **Demo Data Experience**
-- **Realistic Music Library**: 500+ carefully curated demo tracks across all genres
+- **Realistic Music Library**: Carefully curated demo tracks across all genres
 - **Diverse Moods**: Experience recommendations for happy, sad, energetic, calm, and more
 - **No Setup Required**: Try all features immediately without any API keys
 
