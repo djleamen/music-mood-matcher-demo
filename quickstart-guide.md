@@ -22,12 +22,27 @@ streamlit run demo.py
 | `"I want to party and dance"` | Pop, dance, upbeat |
 | `"I need calming music to sleep"` | Soft, slow, peaceful |
 
-## 🔧 Optional: OpenAI Enhanced Mode
+## 🤖 AI Enhancement Features
 
-For better mood understanding, add to `.env`:
-```bash
-OPENAI_API_KEY=your_key_here
-```
+### Standard Mode (No API Key Required)
+- **Basic Mood Detection**: Uses NLTK and keyword matching
+- **Algorithmic Recommendations**: Based on audio feature matching
+- **Fast Performance**: Instant results
+
+### AI-Enhanced Mode (With OpenAI API Key)
+- **🧠 Advanced Mood Analysis**: ChatGPT understands complex emotions
+- **🎵 Intelligent Song Curation**: AI analyzes each song individually
+- **📝 Detailed Explanations**: Get reasoning for every recommendation
+- **⚖️ Song Comparison**: AI ranks multiple songs for specific moods
+- **🎯 Contextual Understanding**: Considers your specific mood description
+
+### Enable AI Features
+1. Get OpenAI API key from [platform.openai.com](https://platform.openai.com)
+2. Create `.env` file:
+   ```bash
+   OPENAI_API_KEY=your_api_key_here
+   ```
+3. Restart the demo to see AI enhancements!
 
 ## 📁 Clean Project Structure
 

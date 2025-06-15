@@ -8,18 +8,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 import pickle
 import os
 import json
-from dotenv import load_dotenv
-
-# Load environment variables
-load_dotenv()
-
-# OpenAI integration
-try:
-    from openai import OpenAI
-    OPENAI_AVAILABLE = True
-except ImportError:
-    print("⚠️ OpenAI package not available. Install with: pip install openai")
-    OPENAI_AVAILABLE = False
+from .utils import initialize_openai_client
 
 # Download required NLTK data
 try:
@@ -83,17 +72,7 @@ class MoodAnalyzer:
         self.vader_analyzer = SentimentIntensityAnalyzer()
 
         # Initialize OpenAI client if available
-        self.openai_client = None
-        if OPENAI_AVAILABLE:
-            api_key = os.environ.get('OPENAI_API_KEY')
-            if api_key:
-                try:
-                    self.openai_client = OpenAI(api_key=api_key)
-                    print("✅ OpenAI client initialized successfully")
-                except Exception as e:
-                    print(f"⚠️ Failed to initialize OpenAI client: {e}")
-            else:
-                print("⚠️ OPENAI_API_KEY not found in environment variables")
+        self.openai_client = initialize_openai_client("mood analysis")
 
         # Define mood-to-audio-features mapping
         self.mood_mappings = {
@@ -183,12 +162,15 @@ class MoodAnalyzer:
         self.mood_keywords = {
             'happy': ['happy', 'joyful', 'cheerful', 'upbeat', 'positive', 'bright', 'sunny', 'elated', 'thrilled'],
             'sad': ['sad', 'depressed', 'down', 'blue', 'melancholy', 'sorrowful', 'heartbroken', 'gloomy'],
-            'energetic': ['energetic', 'pumped', 'hyped', 'excited', 'motivated', 'powerful', 'dynamic', 'intense', 'workout', 'exercise'],
-            'calm': ['calm', 'peaceful', 'relaxed', 'serene', 'tranquil', 'mellow', 'chill', 'zen', 'quiet', 'relaxing', 'soothing'],
+            'energetic': ['energetic', 'pumped', 'hyped', 'excited', 'motivated', 'powerful', 'dynamic', 'intense',
+                         'workout', 'exercise'],
+            'calm': ['calm', 'peaceful', 'relaxed', 'serene', 'tranquil', 'mellow', 'chill', 'zen', 'quiet',
+                    'relaxing', 'soothing'],
             'angry': ['angry', 'mad', 'furious', 'frustrated', 'annoyed', 'irritated', 'rage', 'aggressive'],
             'romantic': ['romantic', 'love', 'intimate', 'passionate', 'sweet', 'tender', 'affectionate'],
             'nostalgic': ['nostalgic', 'memories', 'reminiscent', 'wistful', 'throwback', 'past', 'remember'],
-            'focused': ['focused', 'concentrated', 'work', 'study', 'productive', 'alert', 'attentive', 'concentration', 'studying', 'focus', 'meditation', 'lock', 'concentrate'],
+            'focused': ['focused', 'concentrated', 'work', 'study', 'productive', 'alert', 'attentive',
+                       'concentration', 'studying', 'focus', 'meditation', 'lock', 'concentrate'],
             'party': ['party', 'celebration', 'fun', 'dancing', 'festive', 'lively', 'social', 'clubbing'],
             'melancholic': ['melancholic', 'contemplative', 'pensive', 'brooding', 'reflective', 'introspective']
         }
@@ -297,7 +279,8 @@ class MoodAnalyzer:
             response = self.openai_client.chat.completions.create(
                 model="gpt-3.5-turbo",
                 messages=[
-                    {"role": "system", "content": "You are an expert at analyzing emotional states and moods from text. Always respond with valid JSON."},
+                    {"role": "system", "content": "You are an expert at analyzing emotional states and moods "
+                                                 "from text. Always respond with valid JSON."},
                     {"role": "user", "content": prompt}
                 ],
                 max_tokens=300,

@@ -15,9 +15,13 @@ An intelligent music recommendation system that analyzes your mood through natur
 - **Real-time Analysis**: Instant mood classification with confidence scores
 
 ### 🎵 **Smart Music Recommendations**
-- **AI-Powered Matching**: Advanced algorithms match audio features to your mood
-- **Personalized Playlists**: Generates custom playlists based on your emotional state
-- **Diverse Selection**: Ensures variety while maintaining mood consistency
+- **AI-Enhanced Song Analysis**: ChatGPT analyzes individual songs for mood compatibility
+- **Intelligent Song Selection**: AI evaluates track characteristics beyond simple audio features
+- **Dual Recommendation Modes**: 
+  - Standard algorithmic matching
+  - Advanced AI-powered curation (with OpenAI API key)
+- **Personalized Explanations**: Get detailed AI reasoning for each song recommendation
+- **Song Comparison**: AI ranks multiple songs for specific moods
 - **Interactive Feedback**: Rate recommendations to improve future suggestions
 
 ### 📊 **Comprehensive Analytics**
@@ -144,7 +148,21 @@ musicanalyzer-demo/
 - **NLTK VADER**: Sentiment polarity analysis
 - **TextBlob**: Additional sentiment processing
 - **OpenAI GPT**: Advanced natural language understanding
-- **Custom Keywords**: Mood-specific term detection
+
+#### **Enhanced AI Recommendation Engine**
+- **ChatGPT Song Analysis**: Individual song evaluation for mood compatibility
+- **Intelligent Song Selection**: AI considers track name, artist, and audio features
+- **Contextual Understanding**: Incorporates user's specific mood description
+- **Comparative Ranking**: AI compares multiple songs and ranks them for specific moods
+- **Detailed Explanations**: Provides reasoning for each song recommendation
+- **Dual-Mode Operation**: Seamlessly switches between AI and algorithmic approaches
+
+#### **AI Features Available with OpenAI API Key**
+1. **Enhanced Mood Detection**: More accurate understanding of complex emotions
+2. **Smart Song Curation**: AI analyzes each song individually for optimal mood matching
+3. **Personalized Explanations**: Get detailed reasoning for why specific songs were chosen
+4. **Song Comparison Tool**: AI ranks multiple songs for any mood category
+5. **Contextual Recommendations**: AI considers your specific mood description when selecting music
 
 #### **Music Analyzer**
 - **Audio Features**: Analyzes danceability, energy, valence, tempo, etc.
