@@ -35,8 +35,8 @@ An intelligent music recommendation system that analyzes your mood through natur
 
 ### 1. Clone & Setup
 ```bash
-git clone https://github.com/djleamen/musicanalyzer-demo
-cd musicanalyzer-demo
+git clone https://github.com/djleamen/music-mood-matcher-demo
+cd music-mood-matcher-demo
 ```
 
 ### 2. Install Dependencies
