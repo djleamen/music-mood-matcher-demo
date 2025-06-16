@@ -31,7 +31,7 @@ An intelligent music recommendation system that analyzes your mood through natur
 - **Interactive Charts**: Explore your data with dynamic visualizations
 
 ### 🔬 **Demo Data Experience**
-- **Realistic Music Library**: Carefully curated demo tracks across all genres
+- **Realistic Music Library**: 200+ carefully curated demo tracks across all genres
 - **Diverse Moods**: Experience recommendations for happy, sad, energetic, calm, and more
 - **No Setup Required**: Try all features immediately without any API keys
 
@@ -94,12 +94,6 @@ Navigate to `http://localhost:8501` to access the interactive demo.
 
 4. **Provide Feedback**: Rate songs to improve future recommendations
 
-### 📊 **Analytics Dashboard**
-- **Mood Trends**: Track your emotional patterns
-- **Music Preferences**: Discover your favorite audio characteristics
-- **Recommendation History**: Review past suggestions and feedback
-- **Feature Correlations**: Understand relationships between mood and music
-
 ## 🛠 Advanced Configuration
 
 ### 🤖 **OpenAI Integration** (Optional)
@@ -117,13 +111,6 @@ OPENAI_API_KEY=your_api_key_here
 - Better handling of complex emotional descriptions
 - Contextual reasoning for recommendations
 - Improved accuracy for ambiguous inputs
-
-### 🎚 **Customization Options**
-Modify demo behavior by editing `demo.py`:
-- **Playlist Size**: Change `playlist_size` parameter
-- **Mood Categories**: Add new mood types in `mood_categories`
-- **Audio Features**: Adjust feature weights in recommendation engine
-- **UI Themes**: Customize colors and styling in CSS section
 
 ## 🏗 Technical Architecture
 
@@ -258,7 +245,6 @@ streamlit run demo.py --server.port 8502
 - **Voice Input**: Speak your mood instead of typing
 - **Multiple Languages**: Support for non-English mood descriptions
 - **Social Features**: Share playlists and mood insights
-- **Mobile App**: Native iOS/Android applications
 - **Smart Scheduling**: Automatic mood detection based on time/calendar
 
 ### **Technical Improvements**
