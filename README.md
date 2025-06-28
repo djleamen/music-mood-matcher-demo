@@ -2,7 +2,12 @@
 
 An intelligent music recommendation system that analyzes your mood through natural language and suggests personalized playlists using advanced AI and machine learning techniques.
 
-![Demo Preview](https://img.shields.io/badge/Demo-Interactive-brightgreen) ![Python](https://img.shields.io/badge/Python-3.8+-blue) ![Streamlit](https://img.shields.io/badge/Streamlit-Web%20App-red)
+![Demo Preview](https://img.shields.io/badge/Demo-Interactive-brightgreen)
+![Python](https://img.shields.io/badge/Python-3.8+-blue)
+![Streamlit](https://img.shields.io/badge/Streamlit-Web%20App-red)
+![License](https://img.shields.io/github/license/djleamen/music-mood-matcher-demo)
+![Last Commit](https://img.shields.io/github/last-commit/djleamen/music-mood-matcher-demo)
+![OpenAI Integration](https://img.shields.io/badge/OpenAI-Optional-lightgrey)
 
 ## ✨ Demo Features
 
