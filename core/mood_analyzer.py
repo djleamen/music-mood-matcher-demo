@@ -25,7 +25,6 @@ except (LookupError, OSError):
     # Fallback sentiment analyzer
     class SentimentIntensityAnalyzer:
         """Fallback sentiment analyzer for when NLTK is not available"""
-        
         def polarity_scores(self, text):
             """Analyze sentiment polarity of text"""
             # Simple rule-based sentiment analysis
@@ -69,6 +68,11 @@ except (LookupError, OSError):
                 'neu': neutral,
                 'compound': compound
             }
+
+        def is_positive(self, text):
+            """Check if text has positive sentiment"""
+            scores = self.polarity_scores(text)
+            return scores['compound'] > 0
 
 
 class MoodAnalyzer:
