@@ -1,12 +1,13 @@
-import pandas as pd
-import numpy as np
-from typing import Dict
-import random
-from sklearn.metrics.pairwise import cosine_similarity
-from sklearn.preprocessing import MinMaxScaler
-import pickle
 import os
 import json
+import pickle
+import random
+from typing import Dict
+
+import pandas as pd
+import numpy as np
+from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.preprocessing import MinMaxScaler
 from .utils import initialize_openai_client
 
 
@@ -30,7 +31,7 @@ class RecommendationEngine:
             'diversity': 0.1,
             'feedback_history': 0.1
         }
-        
+
         # Enhanced feedback learning
         self.learned_preferences = {
             'artist_preferences': {},  # artist -> {mood: avg_rating}
@@ -85,7 +86,7 @@ class RecommendationEngine:
         audio_preferences = mood_analysis.get('audio_preferences', {})
 
         # Score all tracks for the target mood
-        scored_tracks = self._score_tracks_for_mood(all_tracks_df, audio_preferences, mood)
+        scored_tracks = self._score_tracks_for_mood(all_tracks_df, audio_preferences)
 
         # Apply user preference scoring
         if self.user_preferences:
@@ -99,7 +100,7 @@ class RecommendationEngine:
 
         return playlist
 
-    def _score_tracks_for_mood(self, tracks_df: pd.DataFrame, audio_preferences: Dict, mood: str) -> pd.DataFrame:
+    def _score_tracks_for_mood(self, tracks_df: pd.DataFrame, audio_preferences: Dict) -> pd.DataFrame:
         """Score tracks based on how well they match the target mood"""
         scored_df = tracks_df.copy()
 
@@ -201,10 +202,10 @@ class RecommendationEngine:
         for _, track in scored_df.iterrows():
             artist = track.get('artist', '')
             track_id = track.get('track_id', str(track.name))
-            
+
             # Start with neutral score
             feedback_score = 0.5
-            
+
             # Check blacklist/favorites first (strongest signal)
             if track_id in self.learned_preferences['track_blacklist']:
                 feedback_score = 0.1  # Strongly penalize blacklisted tracks
@@ -214,19 +215,19 @@ class RecommendationEngine:
                 # Use artist preferences if available
                 if artist in self.learned_preferences['artist_preferences']:
                     artist_prefs = self.learned_preferences['artist_preferences'][artist]
-                    
+
                     # Get average rating for this artist across all moods
                     all_ratings = []
                     for mood_ratings in artist_prefs.values():
                         all_ratings.extend(mood_ratings)
-                    
+
                     if all_ratings:
                         feedback_score = np.mean(all_ratings)
 
             feedback_scores.append(feedback_score)
 
         scored_df['feedback_score'] = feedback_scores
-        
+
         # Apply feedback adjustment to final score
         scored_df['final_score'] = (
             scored_df['mood_score'] * self.weights['mood_match'] +
@@ -305,10 +306,10 @@ class RecommendationEngine:
 
         # Learn from this feedback immediately
         self._learn_from_feedback(feedback_entry)
-        
+
         # Update weights based on feedback patterns
         self._update_recommendation_weights()
-        
+
         print(f"📝 Feedback recorded: {artist} - {rating:.1f} rating for {mood} mood")
 
     def _learn_from_feedback(self, feedback: Dict):
@@ -318,37 +319,37 @@ class RecommendationEngine:
         rating = feedback.get('rating', 0.5)
         track_id = feedback.get('track_id', '')
         track_features = feedback.get('track_features', {})
-        
+
         # Learn artist preferences per mood
         if artist and mood:
             if artist not in self.learned_preferences['artist_preferences']:
                 self.learned_preferences['artist_preferences'][artist] = {}
-            
+
             if mood not in self.learned_preferences['artist_preferences'][artist]:
                 self.learned_preferences['artist_preferences'][artist][mood] = []
-            
+
             self.learned_preferences['artist_preferences'][artist][mood].append(rating)
-        
+
         # Learn audio feature preferences per mood
         if track_features and mood:
             if mood not in self.learned_preferences['feature_preferences']:
                 self.learned_preferences['feature_preferences'][mood] = {}
-            
+
             for feature, value in track_features.items():
                 if isinstance(value, (int, float)):
                     if feature not in self.learned_preferences['feature_preferences'][mood]:
                         self.learned_preferences['feature_preferences'][mood][feature] = []
-                    
+
                     # Weight the feature value by the rating
                     weighted_value = value * rating
                     self.learned_preferences['feature_preferences'][mood][feature].append(weighted_value)
-        
+
         # Track blacklist and favorites
         if track_id:
             if rating <= 0.3:  # Negative feedback
                 self.learned_preferences['track_blacklist'].add(track_id)
                 self.learned_preferences['track_favorites'].discard(track_id)
-            elif rating >= 0.7:  # Positive feedback  
+            elif rating >= 0.7:  # Positive feedback
                 self.learned_preferences['track_favorites'].add(track_id)
                 self.learned_preferences['track_blacklist'].discard(track_id)
 
@@ -387,7 +388,7 @@ class RecommendationEngine:
             avg_ratings = []
             for ratings_list in mood_ratings.values():
                 avg_ratings.extend(ratings_list)
-            
+
             if avg_ratings:
                 avg_rating = np.mean(avg_ratings)
                 if avg_rating >= 0.7:
@@ -566,7 +567,7 @@ class RecommendationEngine:
                 if not isinstance(track, pd.Series):
                     print(f"⚠️ Debug: track is not a Series: {type(track)}")
                     continue
-                    
+
                 song_info = {
                     'id': str(idx),
                     'name': track.get('name', 'Unknown'),
@@ -601,7 +602,7 @@ class RecommendationEngine:
 
             # Build final playlist from recommendations
             recommended_playlist = self._build_playlist_from_chatgpt_recs(
-                filtered_tracks, recommended_ids, playlist_size, diversity_factor
+                filtered_tracks, recommended_ids, playlist_size
             )
 
             if not recommended_playlist.empty:
@@ -626,7 +627,7 @@ class RecommendationEngine:
             return tracks_df.sample(min(max_tracks, len(tracks_df)))
 
         # Score tracks based on audio preferences
-        scored_tracks = self._score_tracks_for_mood(tracks_df, audio_preferences, '')
+        scored_tracks = self._score_tracks_for_mood(tracks_df, audio_preferences)
 
         # Return top scoring tracks
         top_tracks = scored_tracks.nlargest(max_tracks, 'mood_score')
@@ -699,7 +700,7 @@ Focus on songs that truly capture the essence of the "{mood}" mood. Return only 
             return []
 
     def _build_playlist_from_chatgpt_recs(self, filtered_tracks: pd.DataFrame, recommended_ids: list,
-                                        playlist_size: int, diversity_factor: float) -> pd.DataFrame:
+                                        playlist_size: int) -> pd.DataFrame:
         """Build final playlist from ChatGPT recommendations"""
 
         if not recommended_ids:

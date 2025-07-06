@@ -1,21 +1,22 @@
+import os
+import sys
+import uuid
+
 import streamlit as st
 import pandas as pd
 import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
-import os
-import sys
-import uuid
 
 # Add the current directory to Python path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-# Import after path setup to avoid import issues  # noqa: E402
-from core.mood_analyzer import MoodAnalyzer  # noqa: E402
-from core.music_analyzer import MusicAnalyzer  # noqa: E402
-from core.recommendation import RecommendationEngine  # noqa: E402
-from demo_data import TRACKS_DATA  # noqa: E402
+# Import after path setup to avoid import issues
+from core.mood_analyzer import MoodAnalyzer
+from core.music_analyzer import MusicAnalyzer
+from core.recommendation import RecommendationEngine
+from demo_data import TRACKS_DATA
 
 
 # Page configuration
