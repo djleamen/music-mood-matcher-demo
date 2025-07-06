@@ -1,15 +1,16 @@
+import os
+import pickle
+from typing import Dict, List, Tuple, Optional
+
+import matplotlib.pyplot as plt
 import pandas as pd
+import seaborn as sns
 from sklearn.cluster import KMeans
-from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
-import matplotlib.pyplot as plt
-import seaborn as sns
-from typing import Dict, List, Tuple, Optional
-import pickle
-import os
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
 
 
 class MusicAnalyzer:

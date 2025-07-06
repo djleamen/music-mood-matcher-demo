@@ -1,13 +1,15 @@
-import nltk
-from textblob import TextBlob
+import json
+import os
+import pickle
 import re
 from typing import Dict, List, Tuple
+
+import nltk
 import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
-import pickle
-import os
-import json
+from textblob import TextBlob
+
 from .utils import initialize_openai_client
 
 # Download required NLTK data

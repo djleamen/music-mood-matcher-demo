@@ -3,15 +3,15 @@
 Test the feedback functionality to ensure songs don't disappear after rating.
 """
 
-import requests
-import time
 import sys
+
+import requests
 
 def test_streamlit_app():
     """Test that the Streamlit app is responding and functional"""
     print("🧪 Testing AI Music Mood Matcher Feedback System")
     print("=" * 50)
-    
+
     # Test if the app is running
     try:
         response = requests.get("http://localhost:8505", timeout=5)
@@ -24,13 +24,13 @@ def test_streamlit_app():
         print(f"❌ Could not connect to app: {e}")
         print("💡 Make sure the app is running with: python3 -m streamlit run demo.py")
         return False
-    
+
     print("\n🎯 Key Features to Test:")
     print("1. Generate a playlist by describing your mood")
     print("2. Click thumbs up (👍) or thumbs down (👎) on songs")
     print("3. Verify songs remain visible after rating")
     print("4. Check that feedback status updates correctly")
-    
+
     print("\n📝 Manual Test Checklist:")
     print("□ Navigate to 'Mood Matcher' page")
     print("□ Enter mood: 'I need energetic music for working out'")
@@ -41,10 +41,10 @@ def test_streamlit_app():
     print("□ Click 👎 on second song")
     print("□ Verify song remains visible with 'Noted!' status")
     print("□ Generate a new playlist and verify feedback persists")
-    
+
     print("\n🚀 App URL: http://localhost:8505")
     print("📊 Go to the Mood Matcher page to test the functionality!")
-    
+
     return True
 
 if __name__ == "__main__":
