@@ -44,7 +44,7 @@ def initialize_openai_client(service_name: str = ""):
         service_msg = f" for {service_name}" if service_name else ""
         print(f"✅ OpenAI client initialized successfully{service_msg}")
         return client
-    except Exception as e:
+    except (ImportError, AttributeError, ValueError) as e:
         service_msg = f" for {service_name}" if service_name else ""
         print(f"⚠️ Failed to initialize OpenAI client{service_msg}: {e}")
         return None

@@ -12,6 +12,8 @@ from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
+from .mood_analyzer import MoodAnalyzer
+
 
 class MusicAnalyzer:
     def __init__(self):
@@ -154,16 +156,15 @@ class MusicAnalyzer:
         # Rule-based mood inference
         if valence > 0.6 and energy > 0.6 and danceability > 0.6:
             return 'happy/energetic'
-        elif valence < 0.4 and energy < 0.5:
+        if valence < 0.4 and energy < 0.5:
             return 'sad/melancholic'
-        elif energy > 0.7 and tempo > 120:
+        if energy > 0.7 and tempo > 120:
             return 'energetic/pump-up'
-        elif acousticness > 0.5 and energy < 0.5:
+        if acousticness > 0.5 and energy < 0.5:
             return 'calm/acoustic'
-        elif valence > 0.4 and valence < 0.7 and energy < 0.6:
+        if 0.4 < valence < 0.7 and energy < 0.6:
             return 'chill/relaxed'
-        else:
-            return 'neutral/mixed'
+        return 'neutral/mixed'
 
     def build_mood_models(self, df: pd.DataFrame, mood_analyzer) -> Dict:
         """Build predictive models for each mood"""
@@ -183,18 +184,18 @@ class MusicAnalyzer:
             df['mood_score'] = self._calculate_mood_score(df, mood_preferences, available_features)
 
             # Prepare training data
-            X = df[available_features].fillna(df[available_features].median())
+            feature_matrix = df[available_features].fillna(df[available_features].median())
             y = df['mood_score']
 
             # Split data
-            X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+            x_train, x_test, y_train, y_test = train_test_split(feature_matrix, y, test_size=0.2, random_state=42)
 
             # Train model
             model = RandomForestRegressor(n_estimators=100, random_state=42)
-            model.fit(X_train, y_train)
+            model.fit(x_train, y_train)
 
             # Evaluate model
-            y_pred = model.predict(X_test)
+            y_pred = model.predict(x_test)
             mse = mean_squared_error(y_test, y_pred)
 
             mood_models[mood] = {
@@ -248,10 +249,10 @@ class MusicAnalyzer:
             features = model_info['features']
 
             # Prepare features
-            X = tracks_df[features].fillna(tracks_df[features].median())
+            feature_matrix = tracks_df[features].fillna(tracks_df[features].median())
 
             # Predict scores
-            scores = model.predict(X)
+            scores = model.predict(feature_matrix)
             results_df[f'{mood}_score'] = scores
 
         return results_df
@@ -276,8 +277,6 @@ class MusicAnalyzer:
 
     def _rule_based_recommendations(self, mood: str, df: pd.DataFrame, n_recommendations: int) -> pd.DataFrame:
         """Fallback rule-based recommendations"""
-        from .mood_analyzer import MoodAnalyzer
-
         analyzer = MoodAnalyzer()
         mood_preferences = analyzer.mood_mappings.get(mood, {})
 
@@ -299,11 +298,11 @@ class MusicAnalyzer:
     def visualize_music_analysis(self, df: pd.DataFrame, save_path: Optional[str] = None):
         """Create visualizations of music analysis"""
         if df.empty:
-            return
+            return None
 
         available_features = [f for f in self.audio_features if f in df.columns]
         if not available_features:
-            return
+            return None
 
         # Create subplots
         fig, axes = plt.subplots(2, 2, figsize=(15, 10))
