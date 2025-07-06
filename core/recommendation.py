@@ -536,10 +536,9 @@ class RecommendationEngine:
             return self._generate_playlist_with_chatgpt(
                 mood_analysis, all_tracks_df, playlist_size, diversity_factor
             )
-        else:
-            return self.generate_mood_playlist(
-                mood_analysis, all_tracks_df, playlist_size, diversity_factor
-            )
+        return self.generate_mood_playlist(
+            mood_analysis, all_tracks_df, playlist_size, diversity_factor
+        )
 
     def _generate_playlist_with_chatgpt(self,
                                       mood_analysis: Dict,
@@ -611,11 +610,10 @@ class RecommendationEngine:
                     lambda row: self._get_ai_song_explanation(row, mood), axis=1
                 )
                 return recommended_playlist
-            else:
-                # Fallback to standard method
-                return self.generate_mood_playlist(mood_analysis, all_tracks_df, playlist_size, diversity_factor)
+            # Fallback to standard method
+            return self.generate_mood_playlist(mood_analysis, all_tracks_df, playlist_size, diversity_factor)
 
-        except Exception as e:
+        except (KeyError, AttributeError, ValueError) as e:
             print(f"⚠️ ChatGPT song analysis failed: {e}")
             # Fallback to standard method (disable AI enhancement to prevent recursion)
             return self.generate_mood_playlist(mood_analysis, all_tracks_df, playlist_size, diversity_factor, use_ai_enhancement=False)
@@ -728,8 +726,7 @@ Focus on songs that truly capture the essence of the "{mood}" mood. Return only 
 
         if playlist_tracks:
             return pd.DataFrame(playlist_tracks)
-        else:
-            return pd.DataFrame()
+        return pd.DataFrame()
 
     def _get_ai_song_explanation(self, track_row, mood: str) -> str:
         """Generate explanation for why AI selected this song for the mood"""
@@ -752,8 +749,7 @@ Focus on songs that truly capture the essence of the "{mood}" mood. Return only 
 
         if explanations:
             return f"Selected for {mood} mood due to {', '.join(explanations)}"
-        else:
-            return f"AI-curated match for {mood} mood"
+        return f"AI-curated match for {mood} mood"
 
     def get_ai_song_analysis(self, track: Dict, mood: str, user_context: str = "") -> str:
         """Get detailed AI analysis of why a specific song fits a mood"""
@@ -807,7 +803,7 @@ Focus on connecting the technical audio features to the emotional experience.
             explanation = response.choices[0].message.content.strip()
             return explanation
 
-        except Exception as e:
+        except (KeyError, AttributeError, ValueError) as e:
             print(f"⚠️ AI song analysis failed: {e}")
             return self.get_recommendation_explanation(track, mood)
 
@@ -872,6 +868,6 @@ Respond with JSON:
 
             return json.loads(result_text)
 
-        except Exception as e:
+        except (KeyError, AttributeError, ValueError, json.JSONDecodeError) as e:
             print(f"⚠️ AI song comparison failed: {e}")
             return {}

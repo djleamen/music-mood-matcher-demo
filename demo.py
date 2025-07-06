@@ -109,7 +109,7 @@ def initialize_demo_state():
         feedback_file = 'data/user_feedback_data.pkl'
         if st.session_state.recommendation_engine.load_recommendation_data(feedback_file):
             st.toast("🧠 Loaded your previous feedback and preferences!")
-    
+
     # Initialize a session counter for unique keys
     if 'session_counter' not in st.session_state:
         st.session_state.session_counter = 0
@@ -264,13 +264,13 @@ def demo_mood_matcher():
             with st.spinner("Analyzing your mood..."):
                 # Analyze mood
                 mood_analysis = st.session_state.mood_analyzer.analyze_mood(mood_input)
-                
+
                 # Store mood analysis and settings in session state
                 st.session_state.current_mood_analysis = mood_analysis
                 st.session_state.current_playlist_size = playlist_size
                 st.session_state.current_use_ai = use_ai
                 st.session_state.current_mood_input = mood_input
-                
+
                 # Increment session counter for unique keys
                 st.session_state.session_counter += 1
 
@@ -283,7 +283,7 @@ def demo_mood_matcher():
                         playlist_size=playlist_size,
                         use_ai_enhancement=use_ai
                     )
-                    
+
                 # Store the recommendations in session state
                 st.session_state.current_recommendations = recommendations
         else:
@@ -388,15 +388,15 @@ def demo_mood_matcher():
                     'energy': track.get('energy', 0.5),
                     'danceability': track.get('danceability', 0.5)
                 }
-                
+
                 # Initialize feedback state if not exists
                 if 'track_feedback' not in st.session_state:
                     st.session_state.track_feedback = {}
-                
+
                 # Check if this track already has feedback
                 track_feedback_key = f"{track_id}_{primary_mood}"
                 has_feedback = track_feedback_key in st.session_state.track_feedback
-                
+
                 if has_feedback:
                     # Show feedback status instead of buttons
                     feedback_status = st.session_state.track_feedback[track_feedback_key]
@@ -421,7 +421,7 @@ def demo_mood_matcher():
                             save_feedback_data()  # Persist learning
                             st.session_state.track_feedback[track_feedback_key] = 'liked'
                             # No st.rerun() needed - will update on next interaction
-                            
+
                     with feedback_col2:
                         if st.button("👎", key=f"dislike_{i}"):
                             # Add negative feedback
@@ -468,35 +468,35 @@ def demo_mood_matcher():
                 # Use uuid to ensure absolutely unique keys
                 chart_key = f"mood_audio_features_{str(uuid.uuid4())[:8]}"
                 st.plotly_chart(fig, use_container_width=True, key=chart_key)
-        
+
         # Show feedback insights if there's any feedback data (moved outside the song loop)
         insights = st.session_state.recommendation_engine.get_feedback_insights()
         if insights['total_feedback'] > 0:
             with st.expander(f"🧠 Learning Insights ({insights['total_feedback']} feedback items)"):
                 col1, col2 = st.columns(2)
-                
+
                 with col1:
                     st.write("**System Learning Status:**")
                     st.info(f"Status: {insights['learning_status']}")
-                    
+
                     if insights['favorite_artists']:
                         st.write("**Favorite Artists:**")
-                        for artist, rating in sorted(insights['favorite_artists'].items(), 
+                        for artist, rating in sorted(insights['favorite_artists'].items(),
                                                     key=lambda x: x[1], reverse=True)[:3]:
                             st.write(f"• {artist} ({rating:.1f}⭐)")
-                    
+
                     if insights['disliked_artists']:
                         st.write("**Learning to Avoid:**")
-                        for artist, rating in sorted(insights['disliked_artists'].items(), 
+                        for artist, rating in sorted(insights['disliked_artists'].items(),
                                                     key=lambda x: x[1])[:3]:
                             st.write(f"• {artist} ({rating:.1f}⭐)")
-                
+
                 with col2:
                     st.write("**Feedback Summary:**")
                     st.metric("Total Feedback", insights['total_feedback'])
                     st.metric("Favorites", insights['favorites_count'])
                     st.metric("Blacklisted", insights['blacklist_count'])
-                    
+
                     if insights['mood_feedback_counts']:
                         st.write("**Feedback by Mood:**")
                         for mood, count in insights['mood_feedback_counts'].items():
@@ -698,7 +698,7 @@ def main():
     # Feedback Management Section
     st.sidebar.markdown("---")
     st.sidebar.markdown("**🧠 Learning Management**")
-    
+
     if 'recommendation_engine' in st.session_state:
         insights = st.session_state.recommendation_engine.get_feedback_insights()
         if insights['total_feedback'] > 0:
@@ -706,7 +706,7 @@ def main():
             st.sidebar.markdown(f"**Total Feedback**: {insights['total_feedback']}")
             st.sidebar.markdown(f"**Favorites**: {insights['favorites_count']}")
             st.sidebar.markdown(f"**Blacklisted**: {insights['blacklist_count']}")
-            
+
             if st.sidebar.button("🗑️ Clear All Feedback"):
                 st.session_state.recommendation_engine.feedback_data = []
                 st.session_state.recommendation_engine.learned_preferences = {
