@@ -82,7 +82,6 @@ class RecommendationEngine:
             )
 
         # Fallback to standard method
-        mood = mood_analysis.get('primary_mood', 'calm')
         audio_preferences = mood_analysis.get('audio_preferences', {})
 
         # Score all tracks for the target mood

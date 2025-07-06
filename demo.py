@@ -9,14 +9,13 @@ import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 
-# Add the current directory to Python path
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-
-# Import after path setup to avoid import issues
 from core.mood_analyzer import MoodAnalyzer
 from core.music_analyzer import MusicAnalyzer
 from core.recommendation import RecommendationEngine
 from demo_data import TRACKS_DATA
+
+# Add the current directory to Python path
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 
 # Page configuration
