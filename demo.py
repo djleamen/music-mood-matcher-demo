@@ -367,7 +367,7 @@ def demo_mood_matcher():
                                 track.to_dict(), primary_mood, mood_input
                             )
                             st.caption(f"🤖 AI Analysis: {detailed_analysis}")
-                        except Exception:
+                        except (AttributeError, KeyError, TypeError):
                             st.caption("🔧 Algorithmic recommendation")
 
             with col2:
@@ -459,9 +459,7 @@ def demo_mood_matcher():
                 ))
 
                 fig.update_layout(
-                    polar=dict(
-                        radialaxis=dict(visible=True, range=[0, 1])
-                    ),
+                    polar={"radialaxis": {"visible": True, "range": [0, 1]}},
                     title="Audio Features Profile of Recommendations"
                 )
                 # Use uuid to ensure absolutely unique keys
@@ -549,9 +547,7 @@ def demo_analytics():
         ))
 
     fig.update_layout(
-        polar=dict(
-            radialaxis=dict(visible=True, range=[0, 1])
-        ),
+        polar={"radialaxis": {"visible": True, "range": [0, 1]}},
         title="Audio Features by Mood Category"
     )
     st.plotly_chart(fig, use_container_width=True, key="mood_features_radar")
@@ -601,7 +597,7 @@ def demo_analytics():
                         else:
                             st.error("AI comparison failed. Please try again.")
 
-                    except Exception as e:
+                    except (AttributeError, KeyError, TypeError) as e:
                         st.error(f"AI analysis error: {str(e)}")
 
         # Show the songs being compared

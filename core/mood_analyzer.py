@@ -24,7 +24,10 @@ except (LookupError, OSError):
 
     # Fallback sentiment analyzer
     class SentimentIntensityAnalyzer:
+        """Fallback sentiment analyzer for when NLTK is not available"""
+        
         def polarity_scores(self, text):
+            """Analyze sentiment polarity of text"""
             # Simple rule-based sentiment analysis
             text = text.lower()
             positive_words = [
@@ -229,7 +232,7 @@ class MoodAnalyzer:
                         score += 2  # Exact match gets higher score
                         matches += 1
                         break
-                    elif len(keyword) >= 4 and (keyword in word or word in keyword):
+                    if len(keyword) >= 4 and (keyword in word or word in keyword):
                         # Only allow partial matches for longer keywords
                         score += 1
                         matches += 1
@@ -333,12 +336,12 @@ class MoodAnalyzer:
                     'method': 'openai'
                 }
 
-            except json.JSONDecodeError as e:
+            except (json.JSONDecodeError, ValueError) as e:
                 print(f"⚠️ Failed to parse OpenAI response: {e}")
                 print(f"Raw response: {result_text}")
                 return self.analyze_mood_fallback(text)
 
-        except Exception as e:
+        except (ImportError, AttributeError, KeyError) as e:
             print(f"⚠️ OpenAI API error: {e}")
             return self.analyze_mood_fallback(text)
 
@@ -372,8 +375,7 @@ class MoodAnalyzer:
         """Main mood analysis function - uses OpenAI if available, fallback otherwise"""
         if self.openai_client:
             return self.analyze_mood_with_openai(text)
-        else:
-            return self.analyze_mood_fallback(text)
+        return self.analyze_mood_fallback(text)
 
     def _determine_primary_mood(self, sentiment: Dict, keyword_moods: Dict, text: str) -> str:
         """Determine primary mood from sentiment and keyword analysis"""
@@ -410,8 +412,7 @@ class MoodAnalyzer:
             # If it mentions chill/relax with study, it's calm studying
             if any(term in text_lower for term in ['chill', 'relax', 'calm', 'peaceful']):
                 return 'calm'
-            else:
-                return 'focused'
+            return 'focused'
 
         # Check for chill/relaxing terms
         if any(term in text_lower for term in ['chill', 'relax', 'calm', 'peaceful', 'tranquil', 'zen']):
@@ -428,12 +429,11 @@ class MoodAnalyzer:
 
         if compound >= 0.5:
             return 'happy'
-        elif compound <= -0.5:
+        if compound <= -0.5:
             return 'sad'
-        elif compound <= -0.1:
+        if compound <= -0.1:
             return 'melancholic'
-        else:
-            return 'calm'  # Default to calm for neutral sentiment
+        return 'calm'  # Default to calm for neutral sentiment
 
     def add_training_data(self, text: str, mood: str, feedback_score: float = 1.0):
         """Add custom training data for mood detection"""
