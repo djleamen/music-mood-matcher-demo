@@ -39,9 +39,18 @@ music-mood-matcher-demo/
    - C0114: Missing module docstring
    - C0115: Missing class docstring
    - C0116: Missing function docstring
+   - C0303: Trailing whitespace
+   - E0401: Import error
    - R0902: Too many instance attributes
+   - R0903: Too few public methods
+   - R0911: Too many return statements
+   - R0912: Too many branches
    - R0913: Too many arguments
-   - Other complexity warnings (R0911, R0912, R0914, R0915, R1702)
+   - R0914: Too many local variables
+   - R0915: Too many statements
+   - R0917: Too many positional arguments
+   - R1702: Too many nested blocks
+   - R1716: Simplifiable if statement
 
 2. **Type Hints**: Use type hints for function parameters and return values where possible:
    ```python
