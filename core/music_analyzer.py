@@ -128,9 +128,10 @@ class MusicAnalyzer:
             # Calculate mean features for this cluster
             cluster_profile = cluster_data[features].mean().to_dict()
 
-            # Get representative tracks
+            # Get representative tracks (only include columns that exist)
+            track_columns = [c for c in ['name', 'artist', 'playlist_name'] if c in cluster_data.columns]
             representative_tracks = cluster_data.sample(min(5, len(cluster_data)))[
-                ['name', 'artist', 'playlist_name']
+                track_columns
             ].to_dict('records') if 'name' in cluster_data.columns else []
 
             # Determine cluster mood based on audio features
@@ -286,7 +287,11 @@ class MusicAnalyzer:
         # Filter based on mood preferences
         filtered_df = df.copy()
 
-        for feature, (min_val, max_val) in mood_preferences.items():
+        for feature, preference in mood_preferences.items():
+            # Skip non-range entries such as 'description'
+            if not (isinstance(preference, tuple) and len(preference) == 2):
+                continue
+            min_val, max_val = preference
             if feature in filtered_df.columns:
                 filtered_df = filtered_df[
                     (filtered_df[feature] >= min_val)
