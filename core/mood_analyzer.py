@@ -10,7 +10,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from textblob import TextBlob
 
-from .utils import initialize_openai_client
+from .utils import OPENAI_MODEL, initialize_openai_client
 
 # Download required NLTK data
 try:
@@ -286,7 +286,7 @@ class MoodAnalyzer:
             """
 
             response = self.openai_client.chat.completions.create(
-                model="gpt-3.5-turbo",
+                model=OPENAI_MODEL,
                 messages=[
                     {"role": "system", "content": "You are an expert at analyzing emotional states and moods "
                                                  "from text. Always respond with valid JSON."},

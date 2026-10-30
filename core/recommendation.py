@@ -8,7 +8,7 @@ import pandas as pd
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.preprocessing import MinMaxScaler
-from .utils import initialize_openai_client
+from .utils import OPENAI_MODEL, initialize_openai_client
 
 
 class RecommendationEngine:
@@ -487,6 +487,8 @@ class RecommendationEngine:
             'scaler': self.scaler
         }
 
+        # The data directory is gitignored, so it doesn't exist on a fresh clone.
+        os.makedirs(os.path.dirname(filepath) or '.', exist_ok=True)
         with open(filepath, 'wb') as f:
             pickle.dump(data, f)
         print(f"✅ Saved {len(self.feedback_data)} feedback entries and learned preferences")
@@ -494,8 +496,14 @@ class RecommendationEngine:
     def load_recommendation_data(self, filepath: str):
         """Load recommendation engine data including learned preferences"""
         if os.path.exists(filepath):
-            with open(filepath, 'rb') as f:
-                data = pickle.load(f)
+            try:
+                with open(filepath, 'rb') as f:
+                    data = pickle.load(f)
+            except (OSError, EOFError, pickle.UnpicklingError, AttributeError, ImportError) as e:
+                # A corrupt or incompatible file shouldn't stop the app from starting.
+                print(f"⚠️ Ignoring unreadable feedback data at {filepath}: {e}")
+                return False
+            if isinstance(data, dict):
                 self.user_preferences = data.get('user_preferences', {})
                 self.feedback_data = data.get('feedback_data', [])
                 self.learned_preferences = data.get('learned_preferences', {
@@ -585,7 +593,7 @@ class RecommendationEngine:
             prompt = self._create_song_analysis_prompt(mood, reasoning, songs_for_analysis, playlist_size, audio_preferences)
 
             response = self.openai_client.chat.completions.create(
-                model="gpt-3.5-turbo",
+                model=OPENAI_MODEL,
                 messages=[
                     {"role": "system", "content": "You are an expert music curator and mood analyst. You understand how audio features relate to emotional states and can identify which songs best match specific moods."},
                     {"role": "user", "content": prompt}
@@ -790,7 +798,7 @@ Focus on connecting the technical audio features to the emotional experience.
 """
 
             response = self.openai_client.chat.completions.create(
-                model="gpt-3.5-turbo",
+                model=OPENAI_MODEL,
                 messages=[
                     {"role": "system", "content": "You are an expert music analyst who can explain how songs connect to emotions and moods through their audio characteristics."},
                     {"role": "user", "content": prompt}
@@ -848,7 +856,7 @@ Respond with JSON:
 """
 
             response = self.openai_client.chat.completions.create(
-                model="gpt-3.5-turbo",
+                model=OPENAI_MODEL,
                 messages=[
                     {"role": "system", "content": "You are an expert at analyzing and ranking music for different moods and emotional states."},
                     {"role": "user", "content": prompt}

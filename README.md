@@ -4,7 +4,7 @@ An intelligent music recommendation system that analyzes your mood through natur
 
 ![Demo Preview](https://img.shields.io/badge/Demo-Interactive-brightgreen)
 ![Build](https://img.shields.io/github/actions/workflow/status/djleamen/music-mood-matcher-demo/pylint.yml)
-![Python](https://img.shields.io/badge/Python-3.8+-blue)
+![Python](https://img.shields.io/badge/Python-3.10+-blue)
 ![Streamlit](https://img.shields.io/badge/Streamlit-Web%20App-red)
 ![License](https://img.shields.io/github/license/djleamen/music-mood-matcher-demo)
 ![Last Commit](https://img.shields.io/github/last-commit/djleamen/music-mood-matcher-demo)
@@ -68,7 +68,7 @@ Navigate to `http://localhost:8501` to access the interactive demo.
 
 ## 📋 System Requirements
 
-- **Python**: 3.8 or higher
+- **Python**: 3.10 or higher
 - **Memory**: 2GB RAM minimum
 - **Storage**: 100MB for dependencies
 - **Browser**: Any modern web browser

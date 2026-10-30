@@ -10,6 +10,10 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv()
 
+# Chat model used for all AI features. gpt-3.5-turbo is a legacy model;
+# override with OPENAI_MODEL in .env without touching code.
+OPENAI_MODEL = os.environ.get('OPENAI_MODEL', 'gpt-4o-mini')
+
 # OpenAI integration
 try:
     from openai import OpenAI

@@ -193,11 +193,11 @@ def demo_home():
         )
 
         fig.update_layout(height=600, title="Music Library Analysis")
-        st.plotly_chart(fig, use_container_width=True, key="library_analysis_chart")
+        st.plotly_chart(fig, width="stretch", key="library_analysis_chart")
 
     # Sample tracks table
     display_columns = ['name', 'artist', 'mood_category', 'valence', 'energy', 'danceability']
-    st.dataframe(st.session_state.demo_tracks[display_columns], use_container_width=True)
+    st.dataframe(st.session_state.demo_tracks[display_columns], width="stretch")
 
 
 def demo_mood_matcher():
@@ -464,7 +464,7 @@ def demo_mood_matcher():
                 )
                 # Use uuid to ensure absolutely unique keys
                 chart_key = f"mood_audio_features_{str(uuid.uuid4())[:8]}"
-                st.plotly_chart(fig, use_container_width=True, key=chart_key)
+                st.plotly_chart(fig, width="stretch", key=chart_key)
 
         # Show feedback insights if there's any feedback data (moved outside the song loop)
         insights = st.session_state.recommendation_engine.get_feedback_insights()
@@ -527,7 +527,7 @@ def demo_analytics():
     mood_counts = st.session_state.demo_tracks['mood_category'].value_counts()
     fig = px.pie(values=mood_counts.values, names=mood_counts.index,
                  title="Distribution of Moods in Library")
-    st.plotly_chart(fig, use_container_width=True, key="mood_distribution_pie")
+    st.plotly_chart(fig, width="stretch", key="mood_distribution_pie")
 
     # Audio features analysis
     st.subheader("🎵 Audio Features Analysis")
@@ -550,7 +550,7 @@ def demo_analytics():
         polar={"radialaxis": {"visible": True, "range": [0, 1]}},
         title="Audio Features by Mood Category"
     )
-    st.plotly_chart(fig, use_container_width=True, key="mood_features_radar")
+    st.plotly_chart(fig, width="stretch", key="mood_features_radar")
 
     # AI Song Comparison Demo (if OpenAI is available)
     if hasattr(st.session_state.recommendation_engine, 'openai_client') and st.session_state.recommendation_engine.openai_client:
@@ -612,7 +612,7 @@ def demo_analytics():
                      color='mood_category',
                      hover_data=['name', 'artist'],
                      title="Songs in Valence-Energy Space")
-    st.plotly_chart(fig, use_container_width=True, key="valence_energy_scatter")
+    st.plotly_chart(fig, width="stretch", key="valence_energy_scatter")
 
 
 def main():
