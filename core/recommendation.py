@@ -499,7 +499,7 @@ class RecommendationEngine:
             try:
                 with open(filepath, 'rb') as f:
                     data = pickle.load(f)
-            except (OSError, EOFError, pickle.UnpicklingError, AttributeError, ImportError) as e:
+            except (OSError, EOFError, ValueError, pickle.UnpicklingError, AttributeError, ImportError) as e:
                 # A corrupt or incompatible file shouldn't stop the app from starting.
                 print(f"⚠️ Ignoring unreadable feedback data at {filepath}: {e}")
                 return False
